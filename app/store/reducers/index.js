@@ -1,5 +1,9 @@
 import { combineReducers } from "redux";
 
-const rootReducer = combineReducers({});
+import browser from "./browser";
+
+const rootReducer = combineReducers({
+  browser,
+});
 
 export default rootReducer;
