@@ -13,12 +13,11 @@ class WelcomeScreen extends Component {
           <View style={styles.elementsContainer}>
             <Text style={styles.appName}>PROSPR</Text>
             <Text style={styles.subHeading}>
-              Welcome to{"\n"}the first official{"\n"}economic{"\n"}
+              The first official{"\n"}economic{"\n"}
               self-comsumption{"\n"}platform
             </Text>
             <Text style={styles.smallHeading}>
-              Contains a large{"\n"}database of businesses{"\n"}and business
-              owners
+              Post your services{"\n"}or browse a database{"\n"}of businesses
             </Text>
             <AuthButton
               onPress={() => this.props.navigation.push("BrowserLogin")}
