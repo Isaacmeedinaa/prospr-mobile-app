@@ -108,7 +108,7 @@ const ProStack = createStackNavigator();
 
 export const ProStackNavigator = () => {
   return (
-    <ProStack.Navigator initialRouteName="BrowserTabs">
+    <ProStack.Navigator initialRouteName="ProTabs">
       <ProStack.Screen name="ProTabs" component={ProTabsNavigator} />
       <ProStack.Screen name="ProNewProsp" component={ProNewProspScreen} />
       <ProStack.Screen name="ProEditProsp" component={ProEditProspScreen} />
