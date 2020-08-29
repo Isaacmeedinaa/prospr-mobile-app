@@ -58,7 +58,7 @@ class ProLoginScreen extends Component {
               <Text style={styles.appName}>PROSPR</Text>
               <Text style={styles.subHeading}>Welcome Back</Text>
               <Text style={styles.smallHeading}>
-                Login to post new services{"\n"}to our services database
+                Login to post new services{"\n"}to our businesses database
               </Text>
               <TextInput
                 style={styles.authInput}
@@ -93,7 +93,7 @@ class ProLoginScreen extends Component {
                 btnText="Login"
               />
               <AuthButton
-                onPress={() => console.log("hi")}
+                onPress={() => this.props.navigation.push("ProRegister")}
                 btnStyle={styles.registerBtn}
                 btnText="Create an Account"
               />
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondaryLight,
   },
   proLoginScrollView: {
-    flex: 1,
+    height: "100%",
     justifyContent: "center",
     alignContent: "center",
   },

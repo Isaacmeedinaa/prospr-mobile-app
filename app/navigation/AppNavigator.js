@@ -38,16 +38,7 @@ class AppNavigator extends Component {
   }
 
   render() {
-    if (this.props.loader) {
-      return (
-        <View style={styles.screen}>
-          <ActivityIndicator size="large" color={colors.primaryColor} />
-        </View>
-      );
-    } else if (
-      !this.props.loggedInUser.jwt &&
-      !this.props.loggedInUser.userType
-    ) {
+    if (!this.props.loggedInUser.jwt && !this.props.loggedInUser.userType) {
       return (
         <NavigationContainer>
           <AuthStackNavigator />
