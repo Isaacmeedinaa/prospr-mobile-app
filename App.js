@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import {} from "react-native";
+import React, { Component, useState } from "react";
+import { AsyncStorage } from "react-native";
 import { Provider } from "react-redux";
 import store from "./app/store/store";
 
@@ -19,23 +19,31 @@ const fetchFonts = () => {
   });
 };
 
-const App = () => {
-  const [fontIsLoaded, setFontIsLoaded] = useState(false);
+class App extends Component {
+  constructor() {
+    super();
 
-  if (!fontIsLoaded) {
-    return (
-      <AppLoading
-        startAsync={fetchFonts}
-        onFinish={() => setFontIsLoaded(true)}
-      />
-    );
+    this.state = {
+      fontIsLoaded: false,
+    };
   }
 
-  return (
-    <Provider store={store}>
-      <AppNavigator />
-    </Provider>
-  );
-};
+  render() {
+    if (!this.state.fontIsLoaded) {
+      return (
+        <AppLoading
+          startAsync={fetchFonts}
+          onFinish={() => this.setState({ fontIsLoaded: true })}
+        />
+      );
+    }
+
+    return (
+      <Provider store={store}>
+        <AppNavigator />
+      </Provider>
+    );
+  }
+}
 
 export default App;

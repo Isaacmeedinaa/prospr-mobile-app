@@ -1,12 +1,21 @@
 import React, { Component } from "react";
-import { SafeAreaView, View, Text, TextInput, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+
+import { connect } from "react-redux";
+import { browserLogin } from "../../../store/actions/browser";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import AuthButton from "../../../components/UI/AuthButton";
 
 import colors from "../../../constants/colors";
-import { color } from "react-native-reanimated";
 
 class BrowserLoginScreen extends Component {
   constructor() {
@@ -18,7 +27,25 @@ class BrowserLoginScreen extends Component {
     };
   }
 
+  handleLoginOnPress = () => {
+    if (this.state.email !== "" || this.state.password !== "") {
+      this.props.browserLogin(this.state.email, this.state.password);
+    }
+    this.setState({
+      email: "",
+      password: "",
+    });
+  };
+
   render() {
+    if (this.props.loader) {
+      return (
+        <View style={styles.activityIndicatorScreen}>
+          <ActivityIndicator size="large" color={colors.primaryColor} />
+        </View>
+      );
+    }
+
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <KeyboardAwareScrollView
@@ -63,7 +90,7 @@ class BrowserLoginScreen extends Component {
                 </Text>
               </View>
               <AuthButton
-                onPress={() => console.log("hi")}
+                onPress={this.handleLoginOnPress}
                 btnStyle={styles.loginBtn}
                 btnText="Login"
               />
@@ -81,6 +108,11 @@ class BrowserLoginScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  activityIndicatorScreen: {
+    flex: 1,
+    justifyContent: "center",
+    alignContent: "center",
+  },
   safeAreaView: {
     flex: 1,
     backgroundColor: colors.secondaryLight,
@@ -160,4 +192,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BrowserLoginScreen;
+const mapStateToProps = (state) => {
+  return {
+    loader: state.loader,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    browserLogin: (email, password) => dispatch(browserLogin(email, password)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BrowserLoginScreen);
