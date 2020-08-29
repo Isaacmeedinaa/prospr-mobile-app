@@ -35,10 +35,7 @@ const screenOptions = {
 
 export const AuthStackNavigator = () => {
   return (
-    <AuthStack.Navigator
-      initialRouteName="Welcome"
-      screenOptions={screenOptions}
-    >
+    <AuthStack.Navigator screenOptions={screenOptions}>
       <AuthStack.Screen name="Welcome" component={WelcomeScreen} />
       <AuthStack.Screen name="BrowserLogin" component={BrowserLoginScreen} />
       <AuthStack.Screen

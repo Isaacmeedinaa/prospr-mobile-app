@@ -6,6 +6,7 @@ import { SET_JWT_AND_TYPE } from "./loggedInUser";
 import { BASE_URL } from "../../constants/urls";
 
 export const PRO_LOGIN = "PRO_LOGIN";
+export const PRO_REGISTER = "PRO_REGISTER";
 export const PRO_LOGOUT = "PRO_LOGOUT";
 
 export const proLogin = (email, password) => {
@@ -45,6 +46,57 @@ export const proLogin = (email, password) => {
         dispatch({ type: IS_NOT_LOADING });
       })
       .catch((err) => console.log(err));
+  };
+};
+
+export const proRegister = (
+  firstName,
+  lastName,
+  email,
+  phoneNumber,
+  password,
+  confirmPassword
+) => {
+  return (dispatch) => {
+    const browserRegisterData = {
+      browser: {
+        first_name: firstName,
+        last_name: lastName,
+        email: email.toLowerCase(),
+        phone_number: phoneNumber,
+        password: password,
+        password_confirmation: confirmPassword,
+      },
+    };
+
+    const reqObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+      body: JSON.stringify(browserRegisterData),
+    };
+
+    dispatch({ type: IS_LOADING });
+    fetch(`${BASE_URL}/pro_register`, reqObj)
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.status !== 200) {
+          Alert.alert("Unable to Register", data.error_messages[0], [
+            { text: "OK" },
+          ]);
+        } else {
+          console.log(data.pro);
+          dispatch({ type: PRO_REGISTER, pro: data.pro });
+          dispatch({
+            type: SET_JWT_AND_TYPE,
+            loggedInUser: { userType: "pro", jwt: data.jwt_token },
+          });
+          saveDataToStorage(data.jwt_token, "pro");
+        }
+        dispatch({ type: IS_NOT_LOADING });
+      });
   };
 };
 

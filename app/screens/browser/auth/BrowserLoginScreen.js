@@ -95,7 +95,7 @@ class BrowserLoginScreen extends Component {
                 btnText="Login"
               />
               <AuthButton
-                onPress={() => console.log("hi")}
+                onPress={() => this.props.navigation.push("BrowserRegister")}
                 btnStyle={styles.registerBtn}
                 btnText="Create an Account"
               />
@@ -118,11 +118,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondaryLight,
   },
   browserLoginScrollView: {
-    flex: 1,
+    height: "100%",
     justifyContent: "center",
     alignContent: "center",
   },
   screen: {
+    flex: 1,
     backgroundColor: colors.secondaryLight,
     flexDirection: "column",
     justifyContent: "center",
