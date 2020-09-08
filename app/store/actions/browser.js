@@ -1,6 +1,7 @@
 import React from "react";
 import { Alert, AsyncStorage } from "react-native";
 
+import { JWT_IS_LOADING, JWT_IS_NOT_LOADING } from "./jwtLoader";
 import { IS_LOADING, IS_NOT_LOADING } from "./loader";
 import { SET_JWT_AND_TYPE } from "./loggedInUser";
 import { BASE_URL } from "../../constants/urls";
@@ -35,6 +36,7 @@ export const browserLogin = (email, password) => {
           Alert.alert(data.error_message, "Please try again.", [
             { text: "OK" },
           ]);
+          dispatch({ type: IS_NOT_LOADING });
         } else {
           dispatch({ type: BROWSER_LOGIN, browser: data.browser });
           dispatch({
@@ -42,8 +44,8 @@ export const browserLogin = (email, password) => {
             loggedInUser: { userType: "browser", jwt: data.jwt_token },
           });
           saveDataToStorage(data.jwt_token, "browser");
+          dispatch({ type: IS_NOT_LOADING });
         }
-        dispatch({ type: IS_NOT_LOADING });
       })
       .catch((err) => console.log(err));
   };
@@ -86,6 +88,7 @@ export const browserRegister = (
           Alert.alert("Unable to Register", data.error_messages[0], [
             { text: "OK" },
           ]);
+          dispatch({ type: IS_NOT_LOADING });
         } else {
           dispatch({ type: BROWSER_REGISTER, browser: data.browser });
           dispatch({
@@ -93,8 +96,8 @@ export const browserRegister = (
             loggedInUser: { userType: "browser", jwt: data.jwt_token },
           });
           saveDataToStorage(data.jwt_token, "browser");
+          dispatch({ type: IS_NOT_LOADING });
         }
-        dispatch({ type: IS_NOT_LOADING });
       });
   };
 };
@@ -107,7 +110,7 @@ export const browserAutoLogin = (jwt_token, userType) => {
       },
     };
 
-    dispatch({ type: IS_LOADING });
+    dispatch({ type: JWT_IS_LOADING });
     fetch(`${BASE_URL}/browser_auto_login`, reqObj)
       .then((resp) => resp.json())
       .then((data) => {
@@ -119,9 +122,9 @@ export const browserAutoLogin = (jwt_token, userType) => {
             type: SET_JWT_AND_TYPE,
             loggedInUser: { userType: userType, jwt: jwt_token },
           });
+          dispatch({ type: JWT_IS_NOT_LOADING });
         }
       });
-    dispatch({ type: IS_NOT_LOADING });
   };
 };
 

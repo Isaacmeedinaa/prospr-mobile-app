@@ -3,4 +3,5 @@ export default {
   darkColor: "#292929",
   primaryLight: "#ffffff",
   secondaryLight: "#fdfdfd",
+  iconFillColor: "#d1d1d1",
 };
