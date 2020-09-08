@@ -1,0 +1,2 @@
+export const JWT_IS_LOADING = "JWT_IS_LOADING";
+export const JWT_IS_NOT_LOADING = "JWT_IS_NOT_LOADING";

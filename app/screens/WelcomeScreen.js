@@ -76,18 +76,18 @@ const styles = StyleSheet.create({
   btnStyleOne: {
     marginTop: 40,
     backgroundColor: colors.darkColor,
-    shadowColor: colors.darkColor,
-    shadowOpacity: 0.4,
-    shadowOffset: { height: 8, width: 0 },
-    shadowRadius: 15,
+    // shadowColor: colors.darkColor,
+    // shadowOpacity: 0.4,
+    // shadowOffset: { height: 8, width: 0 },
+    // shadowRadius: 15,
   },
   btnStyleTwo: {
     marginTop: 20,
     backgroundColor: colors.primaryColor,
-    shadowColor: colors.primaryColor,
-    shadowOpacity: 0.4,
-    shadowOffset: { height: 8, width: 0 },
-    shadowRadius: 15,
+    // shadowColor: colors.primaryColor,
+    // shadowOpacity: 0.4,
+    // shadowOffset: { height: 8, width: 0 },
+    // shadowRadius: 15,
   },
 });
 

@@ -1,8 +1,10 @@
 import React from "react";
-import {} from "react-native";
+import { Button } from "react-native";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+import { Ionicons } from "@expo/vector-icons";
 
 // welcome screen
 import WelcomeScreen from "../screens/WelcomeScreen";
@@ -19,6 +21,9 @@ import BrowserSettingsScreen from "../screens/browser/in-app/BrowserSettingsScre
 import BrowserNewRecommendationScreen from "../screens/browser/in-app/BrowserNewRecommendationScreen";
 import BrowserEditRecommendationScreen from "../screens/browser/in-app/BrowserEditRecommendationScreen";
 import BrowserShowRecommendationScreen from "../screens/browser/in-app/BrowserShowRecommendationScreen";
+import BrowserRecommendationsScreen from "../screens/browser/in-app/BrowserRecommendationsScreen";
+import BrowserServicesScreen from "../screens/browser/in-app/BrowserServicesScreen";
+import BrowserHomeScreen from "../screens/browser/in-app/BrowserHomeScreen";
 
 // pro screens
 import ProProfileScreen from "../screens/pro/in-app/ProProfileScreen";
@@ -26,16 +31,20 @@ import ProSettingsScreen from "../screens/pro/in-app/ProSettingsScreen";
 import ProNewProspScreen from "../screens/pro/in-app/ProNewProspScreen";
 import ProEditProspScreen from "../screens/pro/in-app/ProEditProspScreen";
 import ProShowProspScreen from "../screens/pro/in-app/ProShowProspScreen";
+import colors from "../constants/colors";
+import { color } from "react-native-reanimated";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import HeaderRightComponent from "../components/UI/browser/recommendations/HeaderRightComponent";
 
 const AuthStack = createStackNavigator();
 
-const screenOptions = {
+const authStackScreenOptions = {
   headerShown: false,
 };
 
 export const AuthStackNavigator = () => {
   return (
-    <AuthStack.Navigator screenOptions={screenOptions}>
+    <AuthStack.Navigator screenOptions={authStackScreenOptions}>
       <AuthStack.Screen name="Welcome" component={WelcomeScreen} />
       <AuthStack.Screen name="BrowserLogin" component={BrowserLoginScreen} />
       <AuthStack.Screen
@@ -48,45 +57,113 @@ export const AuthStackNavigator = () => {
   );
 };
 
+const BrowserRecommendationsStack = createStackNavigator();
+
+const browserStackScreenOptions = {
+  headerTitleStyle: {
+    color: colors.darkColor,
+    fontFamily: "montserrat-bold",
+  },
+  headerStyle: {
+    backgroundColor: colors.secondaryLight,
+    shadowColor: "transparent",
+  },
+  headerTintColor: colors.primaryColor,
+};
+
+const BrowserRecommendationsScreens = (props) => {
+  return (
+    <BrowserRecommendationsStack.Navigator
+      initialRouteName="BrowserRecommendations"
+      screenOptions={browserStackScreenOptions}
+    >
+      <BrowserRecommendationsStack.Screen
+        name="BrowserRecommendations"
+        component={BrowserRecommendationsScreen}
+        options={{
+          title: "RECOMMENDATIONS",
+          headerTitleAlign: "left",
+          headerRight: () => (
+            <HeaderRightComponent
+              navigation={props.navigation}
+              name="ios-create"
+            />
+          ),
+        }}
+      />
+      <BrowserRecommendationsStack.Screen
+        name="BrowserNewRecommendation"
+        component={BrowserNewRecommendationScreen}
+        options={{ title: "NEW RECOMMENDATION", headerBackTitleVisible: false }}
+      />
+      <BrowserRecommendationsStack.Screen
+        name="BrowserEditRecommendation"
+        component={BrowserEditRecommendationScreen}
+        options={{
+          title: "EDIT RECOMMENDATION",
+          headerBackTitleVisible: false,
+        }}
+      />
+      <BrowserRecommendationsStack.Screen
+        name="BrowserShowRecommendation"
+        component={BrowserShowRecommendationScreen}
+        options={{ title: "RECOMMENDATION", headerBackTitleVisible: false }}
+      />
+    </BrowserRecommendationsStack.Navigator>
+  );
+};
+
 const BrowserTabs = createBottomTabNavigator();
 
-const BrowserTabsNavigator = () => {
+const browserTabBarOptions = {
+  style: {
+    backgroundColor: "#ffffff",
+    elevation: 5,
+    borderTopWidth: 0,
+    shadowColor: colors.darkColor,
+    shadowOpacity: 0.2,
+    shadowOffset: { height: 8, width: 0 },
+  },
+  activeTintColor: colors.primaryColor,
+  inactiveTintColor: "gray",
+  showLabel: false,
+};
+
+export const BrowserTabsNavigator = () => {
   return (
-    <BrowserTabs.Navigator>
+    <BrowserTabs.Navigator
+      tabBarOptions={browserTabBarOptions}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === "BrowserHomeTab") {
+            iconName = focused ? "ios-home" : "ios-home";
+          } else if (route.name === "BrowserRecommendationsTab") {
+            iconName = focused ? "ios-apps" : "ios-apps";
+          } else if (route.name === "BrowserServicesTab") {
+            iconName = focused ? "ios-list-box" : "ios-list-box";
+          } else if (route.name === "BrowserProfileTab") {
+            iconName = focused ? "ios-person" : "ios-person";
+          }
+          return <Ionicons name={iconName} size={28} color={color} />;
+        },
+      })}
+    >
+      <BrowserTabs.Screen name="BrowserHomeTab" component={BrowserHomeScreen} />
+      <BrowserTabs.Screen
+        name="BrowserRecommendationsTab"
+        component={BrowserRecommendationsScreens}
+      />
+      <BrowserTabs.Screen
+        name="BrowserServicesTab"
+        component={BrowserServicesScreen}
+      />
       <BrowserTabs.Screen
         name="BrowserProfileTab"
         component={BrowserProfileScreen}
       />
-      <BrowserTabs.Screen
-        name="BrowserSettingsTab"
-        component={BrowserSettingsScreen}
-      />
     </BrowserTabs.Navigator>
-  );
-};
-
-const BrowserStack = createStackNavigator();
-
-export const BrowserStackNavigator = () => {
-  return (
-    <BrowserStack.Navigator initialRouteName="BrowserTabs">
-      <BrowserStack.Screen
-        name="BrowserTabs"
-        component={BrowserTabsNavigator}
-      />
-      <BrowserStack.Screen
-        name="BrowserNewRecommendation"
-        component={BrowserNewRecommendationScreen}
-      />
-      <BrowserStack.Screen
-        name="BrowserEditRecommendation"
-        component={BrowserEditRecommendationScreen}
-      />
-      <BrowserStack.Screen
-        name="BrowserShowRecommendation"
-        component={BrowserShowRecommendationScreen}
-      />
-    </BrowserStack.Navigator>
   );
 };
 

@@ -11,7 +11,7 @@ import colors from "../../../constants/colors";
 class BrowserProfileScreen extends Component {
   render() {
     return (
-      <View>
+      <View style={{ flex: 1, backgroundColor: colors.secondaryLight }}>
         <AuthButton
           onPress={() => this.props.browserLogout()}
           btnStyle={styles.registerBtn}

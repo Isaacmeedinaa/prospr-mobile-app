@@ -3,6 +3,7 @@ import {
   AsyncStorage,
   StyleSheet,
   View,
+  Text,
   ActivityIndicator,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -13,10 +14,11 @@ import { proAutoLogin } from "../store/actions/pro";
 
 import {
   AuthStackNavigator,
-  BrowserStackNavigator,
+  BrowserTabsNavigator,
   ProStackNavigator,
 } from "./ScreenStacks";
-import colors from "../constants/colors";
+
+import LoadingScreen from "../screens/LoadingScreen";
 
 class AppNavigator extends Component {
   componentDidMount() {
@@ -38,7 +40,16 @@ class AppNavigator extends Component {
   }
 
   render() {
-    if (!this.props.loggedInUser.jwt && !this.props.loggedInUser.userType) {
+    if (this.props.jwtLoader) {
+      return (
+        <NavigationContainer>
+          <LoadingScreen />
+        </NavigationContainer>
+      );
+    } else if (
+      !this.props.loggedInUser.jwt &&
+      !this.props.loggedInUser.userType
+    ) {
       return (
         <NavigationContainer>
           <AuthStackNavigator />
@@ -50,7 +61,7 @@ class AppNavigator extends Component {
     ) {
       return (
         <NavigationContainer>
-          <BrowserStackNavigator />
+          <BrowserTabsNavigator />
         </NavigationContainer>
       );
     } else if (
@@ -76,7 +87,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    loader: state.loader,
+    jwtLoader: state.jwtLoader,
     loggedInUser: state.loggedInUser,
     browser: state.browser,
   };
