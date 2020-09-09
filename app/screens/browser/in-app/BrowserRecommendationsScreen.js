@@ -67,6 +67,8 @@ class BrowserRecommendationsScreen extends Component {
           data={this.props.recommendations}
           renderItem={(item) => (
             <RecommendationCard
+              key={item.id}
+              id={item.id}
               recommendationData={item}
               navigation={this.props.navigation}
             />
@@ -81,6 +83,7 @@ class BrowserRecommendationsScreen extends Component {
           }
           onEndReachedThreshold={0}
           onEndReached={this.loadMoreRecommendations}
+          // extraData={this.props.recommendations}
         />
       </View>
     );
