@@ -13,7 +13,7 @@ import { browserLogin } from "../../../store/actions/browser";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import AuthButton from "../../../components/UI/AuthButton";
+import CustomButton from "../../../components/UI/CustomButton";
 
 import colors from "../../../constants/colors";
 
@@ -89,12 +89,12 @@ class BrowserLoginScreen extends Component {
                   Tap Here
                 </Text>
               </View>
-              <AuthButton
+              <CustomButton
                 onPress={this.handleLoginOnPress}
                 btnStyle={styles.loginBtn}
                 btnText="Login"
               />
-              <AuthButton
+              <CustomButton
                 onPress={() => this.props.navigation.push("BrowserRegister")}
                 btnStyle={styles.registerBtn}
                 btnText="Create an Account"

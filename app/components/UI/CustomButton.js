@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 import colors from "../../constants/colors";
 
-class AuthButton extends Component {
+class CustomButton extends Component {
   render() {
     return (
       <TouchableOpacity
@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AuthButton;
+export default CustomButton;

@@ -3,7 +3,7 @@ import { Alert, AsyncStorage } from "react-native";
 
 import { JWT_IS_LOADING, JWT_IS_NOT_LOADING } from "./jwtLoader";
 import { IS_LOADING, IS_NOT_LOADING } from "./loader";
-import { SET_JWT_AND_TYPE } from "./loggedInUser";
+import { SET_JWT_TYPE_AND_ID } from "./loggedInUser";
 import { BASE_URL } from "../../constants/urls";
 
 export const BROWSER_LOGIN = "BROWSER_LOGIN";
@@ -40,10 +40,14 @@ export const browserLogin = (email, password) => {
         } else {
           dispatch({ type: BROWSER_LOGIN, browser: data.browser });
           dispatch({
-            type: SET_JWT_AND_TYPE,
-            loggedInUser: { userType: "browser", jwt: data.jwt_token },
+            type: SET_JWT_TYPE_AND_ID,
+            loggedInUser: {
+              userType: "browser",
+              jwt: data.jwt_token,
+              id: data.browser.id,
+            },
           });
-          saveDataToStorage(data.jwt_token, "browser");
+          saveDataToStorage(data.jwt_token, "browser", data.browser.id);
           dispatch({ type: IS_NOT_LOADING });
         }
       })
@@ -92,17 +96,21 @@ export const browserRegister = (
         } else {
           dispatch({ type: BROWSER_REGISTER, browser: data.browser });
           dispatch({
-            type: SET_JWT_AND_TYPE,
-            loggedInUser: { userType: "browser", jwt: data.jwt_token },
+            type: SET_JWT_TYPE_AND_ID,
+            loggedInUser: {
+              userType: "browser",
+              jwt: data.jwt_token,
+              id: data.browser.id,
+            },
           });
-          saveDataToStorage(data.jwt_token, "browser");
+          saveDataToStorage(data.jwt_token, "browser", data.browser.id);
           dispatch({ type: IS_NOT_LOADING });
         }
       });
   };
 };
 
-export const browserAutoLogin = (jwt_token, userType) => {
+export const browserAutoLogin = (jwt_token, userType, id) => {
   return (dispatch) => {
     const reqObj = {
       headers: {
@@ -119,8 +127,12 @@ export const browserAutoLogin = (jwt_token, userType) => {
         } else {
           dispatch({ type: BROWSER_LOGIN, browser: data.browser });
           dispatch({
-            type: SET_JWT_AND_TYPE,
-            loggedInUser: { userType: userType, jwt: jwt_token },
+            type: SET_JWT_TYPE_AND_ID,
+            loggedInUser: {
+              userType: userType,
+              jwt: jwt_token,
+              id: id,
+            },
           });
           dispatch({ type: JWT_IS_NOT_LOADING });
         }
@@ -133,15 +145,15 @@ export const browserLogout = () => {
     AsyncStorage.removeItem("userData");
     dispatch({ type: BROWSER_LOGOUT });
     dispatch({
-      type: SET_JWT_AND_TYPE,
-      loggedInUser: { userType: null, jwt: null },
+      type: SET_JWT_TYPE_AND_ID,
+      loggedInUser: { userType: null, jwt: null, id: null },
     });
   };
 };
 
-const saveDataToStorage = (jwt_token, userType) => {
+const saveDataToStorage = (jwt_token, userType, id) => {
   AsyncStorage.setItem(
     "userData",
-    JSON.stringify({ jwt_token: jwt_token, userType: userType })
+    JSON.stringify({ jwt_token: jwt_token, userType: userType, id: id })
   );
 };

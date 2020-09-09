@@ -4,7 +4,7 @@ import { View, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { browserLogout } from "../../../store/actions/browser";
 
-import AuthButton from "../../../components/UI/AuthButton";
+import CustomButton from "../../../components/UI/CustomButton";
 
 import colors from "../../../constants/colors";
 
@@ -12,7 +12,7 @@ class BrowserProfileScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.secondaryLight }}>
-        <AuthButton
+        <CustomButton
           onPress={() => this.props.browserLogout()}
           btnStyle={styles.registerBtn}
           btnText="Logout"

@@ -3,7 +3,7 @@ import {
   SET_NEXT_RECOMMENDATIONS,
 } from "../actions/recommendations";
 
-const allRecommendations = (state = [], action) => {
+const recommendations = (state = [], action) => {
   switch (action.type) {
     case SET_INITIAL_RECOMMENDATIONS:
       return action.recommendations;
@@ -14,4 +14,4 @@ const allRecommendations = (state = [], action) => {
   }
 };
 
-export default allRecommendations;
+export default recommendations;

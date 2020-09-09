@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 
-import AuthButton from "../components/UI/AuthButton";
+import CustomButton from "../components/UI/CustomButton";
 
 import colors from "../constants/colors";
 
@@ -19,17 +19,17 @@ class WelcomeScreen extends Component {
             <Text style={styles.smallHeading}>
               Post your services{"\n"}or browse a database{"\n"}of businesses
             </Text>
-            <AuthButton
+            <CustomButton
               onPress={() => this.props.navigation.push("BrowserLogin")}
               btnStyle={styles.btnStyleOne}
               btnText="I'm a Browser"
             />
-            <AuthButton
+            <CustomButton
               onPress={() => this.props.navigation.push("ProLogin")}
               btnStyle={styles.btnStyleTwo}
               btnText="I'm a Pro"
             />
-            <AuthButton
+            <CustomButton
               onPress={() => console.log("hi")}
               btnStyle={styles.btnStyleTwo}
               btnText="Visit Our Website"

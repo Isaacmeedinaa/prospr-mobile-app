@@ -6,7 +6,7 @@ import recommendationsLoader from "./recommendationsLoader";
 import loggedInUser from "./loggedInUser";
 import browser from "./browser";
 import pro from "./pro";
-import allRecommendations from "./allRecommendations";
+import recommendations from "./recommendations";
 
 const rootReducer = combineReducers({
   loader,
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   loggedInUser,
   browser,
   pro,
-  allRecommendations,
+  recommendations,
 });
 
 export default rootReducer;

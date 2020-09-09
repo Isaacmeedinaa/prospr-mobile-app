@@ -64,7 +64,7 @@ class BrowserRecommendationsScreen extends Component {
       <View style={styles.container}>
         <FlatList
           contentContainerStyle={styles.flatList}
-          data={this.props.allRecommendations}
+          data={this.props.recommendations}
           renderItem={(item) => (
             <RecommendationCard
               recommendationData={item}
@@ -105,9 +105,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingBottom: 20,
   },
-  activityIndicatorContianer: {
-    // marginTop: 25,
-  },
 });
 
 const mapStateToProps = (state) => {
@@ -117,7 +114,7 @@ const mapStateToProps = (state) => {
       state.recommendationsLoader.recommendationsAreLoading,
     recommendationsAreRefreshing:
       state.recommendationsLoader.recommendationsAreRefreshing,
-    allRecommendations: state.allRecommendations,
+    recommendations: state.recommendations,
   };
 };
 

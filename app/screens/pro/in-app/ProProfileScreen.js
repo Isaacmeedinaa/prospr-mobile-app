@@ -4,7 +4,7 @@ import { View, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { proLogout } from "../../../store/actions/pro";
 
-import AuthButton from "../../../components/UI/AuthButton";
+import CustomButton from "../../../components/UI/CustomButton";
 
 import colors from "../../../constants/colors";
 
@@ -12,7 +12,7 @@ class ProProfileScreen extends Component {
   render() {
     return (
       <View>
-        <AuthButton
+        <CustomButton
           onPress={() => this.props.proLogout()}
           btnStyle={styles.registerBtn}
           btnText="Logout"

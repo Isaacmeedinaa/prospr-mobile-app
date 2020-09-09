@@ -25,14 +25,13 @@ class AppNavigator extends Component {
     const autoLogin = async () => {
       const userData = await AsyncStorage.getItem("userData");
       const jsonUserData = JSON.parse(userData);
-      const { jwt_token, userType } = jsonUserData;
-
+      const { jwt_token, userType, id } = jsonUserData;
       if (!jwt_token) {
         return;
       } else if (jwt_token && userType === "browser") {
-        this.props.browserAutoLogin(jwt_token, userType);
+        this.props.browserAutoLogin(jwt_token, userType, id);
       } else if (jwt_token && userType === "pro") {
-        this.props.proAutoLogin(jwt_token, userType);
+        this.props.proAutoLogin(jwt_token, userType, id);
       }
     };
 
@@ -95,8 +94,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    browserAutoLogin: (jwt_token, userType) =>
-      dispatch(browserAutoLogin(jwt_token, userType)),
+    browserAutoLogin: (jwt_token, userType, id) =>
+      dispatch(browserAutoLogin(jwt_token, userType, id)),
     proAutoLogin: (jwt_token, userType) =>
       dispatch(proAutoLogin(jwt_token, userType)),
   };

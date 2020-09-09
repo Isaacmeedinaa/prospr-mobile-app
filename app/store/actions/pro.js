@@ -2,7 +2,7 @@ import React from "react";
 import { Alert, AsyncStorage } from "react-native";
 
 import { IS_LOADING, IS_NOT_LOADING } from "./loader";
-import { SET_JWT_AND_TYPE } from "./loggedInUser";
+import { SET_JWT_TYPE_AND_ID } from "./loggedInUser";
 import { BASE_URL } from "../../constants/urls";
 
 export const PRO_LOGIN = "PRO_LOGIN";
@@ -38,10 +38,14 @@ export const proLogin = (email, password) => {
         } else {
           dispatch({ type: PRO_LOGIN, pro: data.pro });
           dispatch({
-            type: SET_JWT_AND_TYPE,
-            loggedInUser: { userType: "pro", jwt: data.jwt_token },
+            type: SET_JWT_TYPE_AND_ID,
+            loggedInUser: {
+              userType: "pro",
+              jwt: data.jwt_token,
+              id: data.pro.id,
+            },
           });
-          saveDataToStorage(data.jwt_token, "pro");
+          saveDataToStorage(data.jwt_token, "pro", data.pro.id);
         }
         dispatch({ type: IS_NOT_LOADING });
       })
@@ -90,17 +94,21 @@ export const proRegister = (
           console.log(data.pro);
           dispatch({ type: PRO_REGISTER, pro: data.pro });
           dispatch({
-            type: SET_JWT_AND_TYPE,
-            loggedInUser: { userType: "pro", jwt: data.jwt_token },
+            type: SET_JWT_TYPE_AND_ID,
+            loggedInUser: {
+              userType: "pro",
+              jwt: data.jwt_token,
+              id: data.pro.id,
+            },
           });
-          saveDataToStorage(data.jwt_token, "pro");
+          saveDataToStorage(data.jwt_token, "pro", data.pro.id);
         }
         dispatch({ type: IS_NOT_LOADING });
       });
   };
 };
 
-export const proAutoLogin = (jwt_token, userType) => {
+export const proAutoLogin = (jwt_token, userType, id) => {
   return (dispatch) => {
     const reqObj = {
       headers: {
@@ -117,8 +125,12 @@ export const proAutoLogin = (jwt_token, userType) => {
         } else {
           dispatch({ type: PRO_LOGIN, pro: data.pro });
           dispatch({
-            type: SET_JWT_AND_TYPE,
-            loggedInUser: { userType: userType, jwt: jwt_token },
+            type: SET_JWT_TYPE_AND_ID,
+            loggedInUser: {
+              userType: userType,
+              jwt: jwt_token,
+              id: id,
+            },
           });
         }
       });
@@ -132,14 +144,14 @@ export const proLogout = () => {
     dispatch({ type: PRO_LOGOUT });
     dispatch({
       type: SET_JWT_AND_TYPE,
-      loggedInUser: { userType: null, jwt: null },
+      loggedInUser: { userType: null, jwt: null, id: null },
     });
   };
 };
 
-const saveDataToStorage = (jwt_token, userType) => {
+const saveDataToStorage = (jwt_token, userType, id) => {
   AsyncStorage.setItem(
     "userData",
-    JSON.stringify({ jwt_token: jwt_token, userType: userType })
+    JSON.stringify({ jwt_token: jwt_token, userType: userType, id: id })
   );
 };
