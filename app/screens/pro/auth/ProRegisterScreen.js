@@ -13,7 +13,7 @@ import { proRegister } from "../../../store/actions/pro";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import AuthButton from "../../../components/UI/AuthButton";
+import CustomButton from "../../../components/UI/CustomButton";
 
 import colors from "../../../constants/colors";
 
@@ -142,12 +142,12 @@ class ProRegisterScreen extends Component {
                   this.setState({ confirmPassword: confirmPassword })
                 }
               />
-              <AuthButton
+              <CustomButton
                 onPress={this.handleRegisterOnPress}
                 btnStyle={styles.registerBtn}
                 btnText="Register"
               />
-              <AuthButton
+              <CustomButton
                 onPress={() => this.props.navigation.goBack()}
                 btnStyle={styles.loginBtn}
                 btnText="Login"

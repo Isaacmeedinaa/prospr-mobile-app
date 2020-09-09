@@ -55,3 +55,19 @@ export const fetchNextRecommendations = (pageNumber) => {
       });
   };
 };
+
+export const createRecommendation = (title, content, images) => {
+  return (dispatch, getState) => {
+    const browserId = getState().loggedInUser.id;
+
+    const recommendationData = {
+      recommendations: {
+        title: title,
+        content: content,
+        browser_id: browserId,
+      },
+    };
+
+    console.log(recommendationData);
+  };
+};

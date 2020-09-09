@@ -1,1 +1,1 @@
-export const SET_JWT_AND_TYPE = "SET_JWT_AND_TYPE";
+export const SET_JWT_TYPE_AND_ID = "SET_JWT_TYPE_AND_ID";
