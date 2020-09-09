@@ -1,6 +1,8 @@
 import {
   SET_INITIAL_RECOMMENDATIONS,
   SET_NEXT_RECOMMENDATIONS,
+  CREATE_RECOMMENDATION,
+  DELETE_RECOMMENDATION,
 } from "../actions/recommendations";
 
 const recommendations = (state = [], action) => {
@@ -9,6 +11,13 @@ const recommendations = (state = [], action) => {
       return action.recommendations;
     case SET_NEXT_RECOMMENDATIONS:
       return [...state, ...action.nextRecommendations];
+    case CREATE_RECOMMENDATION:
+      state.pop();
+      return [action.recommendation, ...state];
+    case DELETE_RECOMMENDATION:
+      return state.filter(
+        (recommendation) => recommendation.id !== action.recommendationId
+      );
     default:
       return state;
   }

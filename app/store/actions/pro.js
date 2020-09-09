@@ -32,9 +32,7 @@ export const proLogin = (email, password) => {
       .then((resp) => resp.json())
       .then((data) => {
         if (data.status !== 200) {
-          Alert.alert(data.error_message, "Please try again.", [
-            { text: "OK" },
-          ]);
+          Alert.alert("Please try again", data.error_message, [{ text: "OK" }]);
         } else {
           dispatch({ type: PRO_LOGIN, pro: data.pro });
           dispatch({

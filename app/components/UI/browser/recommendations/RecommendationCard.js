@@ -6,7 +6,11 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Button,
 } from "react-native";
+
+import { connect } from "react-redux";
+import { deleteRecommendation } from "../../../../store/actions/recommendations";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -63,7 +67,7 @@ class RecommendationCard extends Component {
 
   onRecommendationCardPressHandler = () => {
     this.props.navigation.push("BrowserShowRecommendation", {
-      recommendationId: this.props.recommendationData.item.id,
+      recommendation: this.props.recommendationData.item,
     });
   };
 
@@ -143,6 +147,9 @@ class RecommendationCard extends Component {
               </Text>
             </TouchableOpacity>
           </View>
+          <Text style={styles.postedOn}>
+            {this.props.recommendationData.item.posted_on}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -243,6 +250,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginStart: 7,
   },
+  postedOn: {
+    marginTop: 20,
+    fontFamily: "montserrat-regular",
+  },
 });
 
-export default RecommendationCard;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteRecommendation: (recommendationId, navigation) =>
+      dispatch(deleteRecommendation(recommendationId, navigation)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(RecommendationCard);

@@ -20,6 +20,15 @@ class BrowserNewRecommendationScreen extends Component {
     };
   }
 
+  onPostRecommendationPressHandler = () => {
+    this.props.createRecommendation(
+      this.state.title,
+      this.state.content,
+      this.state.images,
+      this.props.navigation
+    );
+  };
+
   render() {
     return (
       <KeyboardAwareScrollView
@@ -53,13 +62,7 @@ class BrowserNewRecommendationScreen extends Component {
           <CustomButton
             btnStyle={styles.newRecommendationPostBtn}
             btnText="Post Recommendation"
-            onPress={() =>
-              this.props.createRecommendation(
-                this.state.title,
-                this.state.content,
-                this.state.images
-              )
-            }
+            onPress={this.onPostRecommendationPressHandler}
           />
         </View>
       </KeyboardAwareScrollView>
@@ -104,8 +107,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createRecommendation: (title, content, images) =>
-      dispatch(createRecommendation(title, content, images)),
+    createRecommendation: (title, content, images, navigation) =>
+      dispatch(createRecommendation(title, content, images, navigation)),
   };
 };
 
