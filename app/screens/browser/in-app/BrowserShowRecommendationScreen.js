@@ -5,6 +5,36 @@ import { connect } from "react-redux";
 import { deleteRecommendation } from "../../../store/actions/recommendations";
 
 class BrowserShowRecommendationScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    const selectedRecommendation = props.recommendations.find(
+      (recommendation) =>
+        recommendation.id === props.route.params.recommendationId
+    );
+
+    this.state = {
+      recommendation: selectedRecommendation,
+    };
+  }
+
+  onEditRecommendationPressHandler = () => {
+    this.props.navigation.push("BrowserEditRecommendation", {
+      recommendationId: this.props.route.params.recommendationId,
+      onGoBack: () => this.updateRecommendationState(),
+    });
+  };
+
+  updateRecommendationState = async () => {
+    const selectedRecommendation = this.props.recommendations.find(
+      (recommendation) =>
+        recommendation.id === this.props.route.params.recommendationId
+    );
+    await this.setState({
+      recommendation: selectedRecommendation,
+    });
+  };
+
   onDeleteRecommendationPressHandler = () => {
     Alert.alert(
       "Are you sure?",
@@ -15,7 +45,7 @@ class BrowserShowRecommendationScreen extends Component {
           style: "destructive",
           onPress: () =>
             this.props.deleteRecommendation(
-              this.props.route.params.recommendation.id,
+              this.props.route.params.recommendationId,
               this.props.navigation
             ),
         },
@@ -27,7 +57,15 @@ class BrowserShowRecommendationScreen extends Component {
   render() {
     return (
       <View>
-        {this.props.route.params.recommendation.browser.id !==
+        <Text>{this.state.recommendation.title}</Text>
+        {this.state.recommendation.browser.id !==
+        this.props.browserId ? null : (
+          <Button
+            title="Edit Recommendation"
+            onPress={this.onEditRecommendationPressHandler}
+          ></Button>
+        )}
+        {this.state.recommendation.browser.id !==
         this.props.browserId ? null : (
           <Button
             title="Delete Recommendation"
