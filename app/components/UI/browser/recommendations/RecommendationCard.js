@@ -67,7 +67,7 @@ class RecommendationCard extends Component {
 
   onRecommendationCardPressHandler = () => {
     this.props.navigation.push("BrowserShowRecommendation", {
-      recommendation: this.props.recommendationData.item,
+      recommendationId: this.props.recommendationData.item.id,
     });
   };
 
