@@ -150,6 +150,14 @@ class RecommendationCard extends Component {
           <Text style={styles.postedOn}>
             {this.props.recommendationData.item.posted_on}
           </Text>
+          <Button
+            title="Edit"
+            onPress={() =>
+              this.props.navigation.push("BrowserEditRecommendation", {
+                recommendationId: this.props.recommendationData.item.id,
+              })
+            }
+          />
         </View>
       </TouchableOpacity>
     );

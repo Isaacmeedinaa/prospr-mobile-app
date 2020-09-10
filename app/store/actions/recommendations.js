@@ -152,7 +152,11 @@ export const updateRecommendation = (
           });
         }
       })
-      .then((data) => goBackFunc())
+      .then((data) => {
+        if (goBackFunc) {
+          goBackFunc();
+        }
+      })
       .then((data) => navigation.goBack())
       .catch((err) => console.log(err));
   };
