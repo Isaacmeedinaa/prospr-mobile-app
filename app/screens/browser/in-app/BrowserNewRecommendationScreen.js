@@ -1,6 +1,17 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Alert,
+  Text,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { Video } from "expo-av";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
 
 import { connect } from "react-redux";
 import { createRecommendation } from "../../../store/actions/recommendations";
@@ -16,20 +27,83 @@ class BrowserNewRecommendationScreen extends Component {
     this.state = {
       title: "",
       content: "",
-      images: [],
+      media: [],
     };
   }
+
+  componentDidMount() {
+    this.getPermissionAsync();
+  }
+
+  getPermissionAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+    if (status !== "granted") {
+      Alert.alert("Error", "Please enable camera roll permissions", [
+        { text: "OK" },
+      ]);
+    }
+  };
+
+  pickMedia = async () => {
+    if (this.state.media.length === 3) {
+      Alert.alert("Error", "You can only choose 3 images/videos", [
+        { text: "OK" },
+      ]);
+    } else {
+      try {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+          allowsMultipleSelection: true,
+        });
+
+        if (!result.cancelled) {
+          const newMedinaObj = { type: result.type, uri: result.uri };
+          this.setState({
+            ...this.state,
+            media: [...this.state.media, newMedinaObj],
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  onDeleteMediaPressHandler = (type, index) => {
+    Alert.alert(
+      `Delete this ${type}?`,
+      `Are you sure you want to delete this ${type}?`,
+      [
+        { text: "No" },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: () => {
+            this.state.media.splice(index, 1);
+            this.setState({
+              media: this.state.media,
+            });
+          },
+        },
+      ]
+    );
+  };
 
   onPostRecommendationPressHandler = () => {
     this.props.createRecommendation(
       this.state.title,
       this.state.content,
-      this.state.images,
+      this.state.media,
       this.props.navigation
     );
   };
 
   render() {
+    // console.log(this.state.media);
     return (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="handled"
@@ -52,12 +126,51 @@ class BrowserNewRecommendationScreen extends Component {
             value={this.state.content}
             onChangeText={(content) => this.setState({ content: content })}
           />
-          {this.state.images.length === 0 ? null : (
-            <View style={styles.newRecommendationImagesContainer}></View>
+          {this.state.media.length === 0 ? null : (
+            <View style={styles.newRecommendationMediaContainer}>
+              {this.state.media.map((media, index) =>
+                media.type === "image" ? (
+                  <TouchableOpacity
+                    key={index}
+                    activeOpacity={0.8}
+                    onPress={() =>
+                      this.onDeleteMediaPressHandler(media.type, index)
+                    }
+                  >
+                    <Image
+                      key={index}
+                      source={{ uri: media.uri }}
+                      style={styles.image}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    key={index}
+                    activeOpacity={0.8}
+                    onPress={() =>
+                      this.onDeleteMediaPressHandler(media.type, index)
+                    }
+                  >
+                    <Video
+                      key={index}
+                      style={styles.video}
+                      source={{ uri: media.uri }}
+                      rate={1.0}
+                      volume={1.0}
+                      isMuted
+                      resizeMode="cover"
+                      shouldPlay
+                      isLooping
+                    />
+                  </TouchableOpacity>
+                )
+              )}
+            </View>
           )}
           <CustomButton
             btnStyle={styles.newRecommendationImageBtn}
-            btnText="Choose Images"
+            btnText="Choose Images or Videos"
+            onPress={this.pickMedia}
           />
           <CustomButton
             btnStyle={styles.newRecommendationPostBtn}
@@ -89,9 +202,23 @@ const styles = StyleSheet.create({
     fontFamily: "montserrat-regular",
     color: colors.darkColor,
   },
-  newRecommendationImagesContainer: {
+  newRecommendationMediaContainer: {
     marginTop: 30,
     width: 320,
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    backgroundColor: colors.primaryColor,
+  },
+  video: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    backgroundColor: colors.primaryColor,
   },
   newRecommendationImageBtn: {
     marginTop: 30,

@@ -25,6 +25,10 @@ import BrowserRecommendationsScreen from "../screens/browser/in-app/BrowserRecom
 import BrowserServicesScreen from "../screens/browser/in-app/BrowserServicesScreen";
 import BrowserHomeScreen from "../screens/browser/in-app/BrowserHomeScreen";
 
+// Header Buttons
+import HeaderRightComponent from "../components/UI/browser/recommendations/HeaderRightComponent";
+import HeaderBackLeftComponent from "../components/UI/browser/recommendations/HeaderBackLeftComponent";
+
 // pro screens
 import ProProfileScreen from "../screens/pro/in-app/ProProfileScreen";
 import ProSettingsScreen from "../screens/pro/in-app/ProSettingsScreen";
@@ -32,9 +36,6 @@ import ProNewProspScreen from "../screens/pro/in-app/ProNewProspScreen";
 import ProEditProspScreen from "../screens/pro/in-app/ProEditProspScreen";
 import ProShowProspScreen from "../screens/pro/in-app/ProShowProspScreen";
 import colors from "../constants/colors";
-import { color } from "react-native-reanimated";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import HeaderRightComponent from "../components/UI/browser/recommendations/HeaderRightComponent";
 
 const AuthStack = createStackNavigator();
 
@@ -94,7 +95,13 @@ const BrowserRecommendationsScreens = (props) => {
       <BrowserRecommendationsStack.Screen
         name="BrowserNewRecommendation"
         component={BrowserNewRecommendationScreen}
-        options={{ title: "NEW RECOMMENDATION", headerBackTitleVisible: false }}
+        options={{
+          gestureEnabled: false,
+          title: "NEW RECOMMENDATION",
+          headerLeft: () => (
+            <HeaderBackLeftComponent navigation={props.navigation} />
+          ),
+        }}
       />
       <BrowserRecommendationsStack.Screen
         name="BrowserEditRecommendation"
