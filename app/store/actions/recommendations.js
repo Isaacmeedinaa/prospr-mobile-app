@@ -7,7 +7,7 @@ import {
   RECOMMENDATIONS_ARE_REFRESHING,
   RECOMMENDATIONS_ARE_NOT_REFRESHING,
 } from "./recommendationsLoader";
-import { Alert } from "react-native";
+import { Alert, Platform } from "react-native";
 
 export const SET_INITIAL_RECOMMENDATIONS = "SET_INITIAL_RECOMMENDATIONS";
 export const SET_NEXT_RECOMMENDATIONS = "SET_NEXT_RECOMMENDATIONS";
@@ -63,7 +63,7 @@ export const fetchNextRecommendations = (pageNumber) => {
   };
 };
 
-export const createRecommendation = (title, content, images, navigation) => {
+export const createRecommendation = (title, content, media, navigation) => {
   return (dispatch, getState) => {
     const browserId = getState().loggedInUser.id;
     const userToken = getState().loggedInUser.jwt;
@@ -101,8 +101,10 @@ export const createRecommendation = (title, content, images, navigation) => {
           });
           dispatch({ type: IS_NOT_LOADING });
           navigation.goBack();
+          return data.recommendation;
         }
       })
+      .then((recommendation) => {})
       .catch((err) => console.log(err));
   };
 };
@@ -174,7 +176,6 @@ export const deleteRecommendation = (recommendationId, navigation) => {
       },
     };
 
-    // dispatch({ type: IS_LOADING });
     fetch(`${BASE_URL}/recommendations/${recommendationId}`, reqObj)
       .then((resp) => resp.json())
       .then((data) => {
@@ -187,7 +188,6 @@ export const deleteRecommendation = (recommendationId, navigation) => {
             type: DELETE_RECOMMENDATION,
             recommendationId: recommendationId,
           });
-          // dispatch({ type: IS_NOT_LOADING });
           navigation.goBack();
         }
       })
