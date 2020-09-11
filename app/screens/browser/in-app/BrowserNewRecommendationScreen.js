@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, setState } from "react";
 import {
   View,
   StyleSheet,
@@ -28,6 +28,9 @@ class BrowserNewRecommendationScreen extends Component {
       title: "",
       content: "",
       media: [],
+      mediaUrls: [],
+      imageIsUploading: false,
+      imageIsDeleting: false,
     };
   }
 
@@ -57,15 +60,79 @@ class BrowserNewRecommendationScreen extends Component {
           allowsEditing: true,
           aspect: [4, 3],
           quality: 1,
+          base64: true,
           allowsMultipleSelection: true,
         });
 
         if (!result.cancelled) {
-          const newMedinaObj = { type: result.type, uri: result.uri };
+          const newMediaObj = { type: result.type, uri: result.uri };
           this.setState({
             ...this.state,
-            media: [...this.state.media, newMedinaObj],
+            media: [...this.state.media, newMediaObj],
+            imageIsUploading: true,
           });
+
+          if (result.type === "image") {
+            const base64Img = `data:image/jpg;base64,${result.base64}`;
+
+            const imgData = {
+              file: base64Img,
+              upload_preset: "bx8tmipy",
+            };
+
+            const reqObj = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(imgData),
+            };
+
+            fetch(
+              "https://api.cloudinary.com/v1_1/zenyx-llc/image/upload",
+              reqObj
+            )
+              .then((resp) => resp.json())
+              .then((data) => {
+                this.setState({
+                  ...this.state,
+                  mediaUrls: [...this.state.mediaUrls, data.url],
+                  imageIsUploading: false,
+                });
+              });
+          } else if (result.type === "video") {
+            const media = {
+              uri: result.uri,
+              type: `test/${result.uri.split(".")[1]}`,
+              name: `test.${result.uri.split(".")[1]}`,
+            };
+
+            const data = new FormData();
+            data.append("file", media);
+            data.append("upload_preset", "bx8tmipy"),
+              data.append("cloud_name", "zenyx-llc");
+
+            const reqObj = {
+              method: "POST",
+              headers: {
+                Accepts: "application/json",
+              },
+              body: data,
+            };
+
+            fetch(
+              "https://api.cloudinary.com/v1_1/zenyx-llc/video/upload",
+              reqObj
+            )
+              .then((resp) => resp.json())
+              .then((data) => {
+                this.setState({
+                  ...this.state,
+                  mediaUrls: [...this.state.mediaUrls, data.url],
+                  imageIsUploading: false,
+                });
+              });
+          }
         }
       } catch (error) {
         console.log(error);
@@ -74,6 +141,10 @@ class BrowserNewRecommendationScreen extends Component {
   };
 
   onDeleteMediaPressHandler = (type, index) => {
+    this.setState({
+      ...this.state,
+      imageIsDeleting: true,
+    });
     Alert.alert(
       `Delete this ${type}?`,
       `Are you sure you want to delete this ${type}?`,
@@ -85,7 +156,14 @@ class BrowserNewRecommendationScreen extends Component {
           onPress: () => {
             this.state.media.splice(index, 1);
             this.setState({
+              ...this.state,
               media: this.state.media,
+            });
+            this.state.mediaUrls.splice(index, 1);
+            this.setState({
+              ...this.state,
+              mediaUrl: this.state.mediaUrl,
+              imageIsDeleting: false,
             });
           },
         },
@@ -103,7 +181,6 @@ class BrowserNewRecommendationScreen extends Component {
   };
 
   render() {
-    // console.log(this.state.media);
     return (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="handled"
@@ -111,6 +188,9 @@ class BrowserNewRecommendationScreen extends Component {
         contentContainerStyle={styles.newRecommendationScrollView}
       >
         <View style={styles.screen}>
+          {this.state.imageIsUploading ? (
+            <Text style={styles.loadingText}>Image or Video is loading...</Text>
+          ) : null}
           <TextInput
             style={styles.newRecommendationInput}
             placeholder="Recommendation Title"
@@ -168,11 +248,21 @@ class BrowserNewRecommendationScreen extends Component {
             </View>
           )}
           <CustomButton
+            disabled={
+              this.state.imageIsUploading || this.state.imageIsDeleting
+                ? true
+                : false
+            }
             btnStyle={styles.newRecommendationImageBtn}
             btnText="Choose Images or Videos"
             onPress={this.pickMedia}
           />
           <CustomButton
+            disabled={
+              this.state.imageIsUploading || this.state.imageIsDeleting
+                ? true
+                : false
+            }
             btnStyle={styles.newRecommendationPostBtn}
             btnText="Post Recommendation"
             onPress={this.onPostRecommendationPressHandler}
@@ -191,6 +281,12 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 30,
+    fontFamily: "montserrat-semi-bold",
+    color: colors.darkColor,
+    fontSize: 18,
   },
   newRecommendationInput: {
     marginTop: 30,
@@ -234,8 +330,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createRecommendation: (title, content, images, navigation) =>
-      dispatch(createRecommendation(title, content, images, navigation)),
+    createRecommendation: (title, content, media, navigation) =>
+      dispatch(createRecommendation(title, content, media, navigation)),
   };
 };
 
