@@ -77,6 +77,7 @@ class BrowserNewRecommendationScreen extends Component {
 
             const imgData = {
               file: base64Img,
+              folder: "prospr/recommendations",
               upload_preset: "bx8tmipy",
             };
 
@@ -109,6 +110,7 @@ class BrowserNewRecommendationScreen extends Component {
 
             const data = new FormData();
             data.append("file", media);
+            data.append("folder", "prospr");
             data.append("upload_preset", "bx8tmipy"),
               data.append("cloud_name", "zenyx-llc");
 
@@ -126,6 +128,7 @@ class BrowserNewRecommendationScreen extends Component {
             )
               .then((resp) => resp.json())
               .then((data) => {
+                console.log(data);
                 this.setState({
                   ...this.state,
                   mediaUrls: [...this.state.mediaUrls, data.url],
@@ -175,12 +178,13 @@ class BrowserNewRecommendationScreen extends Component {
     this.props.createRecommendation(
       this.state.title,
       this.state.content,
-      this.state.media,
+      this.state.mediaUrls,
       this.props.navigation
     );
   };
 
   render() {
+    console.log(this.props);
     return (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="handled"
@@ -330,8 +334,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createRecommendation: (title, content, media, navigation) =>
-      dispatch(createRecommendation(title, content, media, navigation)),
+    createRecommendation: (title, content, mediaUrls, navigation) =>
+      dispatch(createRecommendation(title, content, mediaUrls, navigation)),
   };
 };
 

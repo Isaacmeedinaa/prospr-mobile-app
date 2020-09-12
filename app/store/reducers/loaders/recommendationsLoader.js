@@ -3,7 +3,7 @@ import {
   RECOMMENDATIONS_ARE_NOT_LOADING,
   RECOMMENDATIONS_ARE_REFRESHING,
   RECOMMENDATIONS_ARE_NOT_REFRESHING,
-} from "../actions/recommendationsLoader";
+} from "../../actions/loaders/recommendationsLoader";
 
 const initialState = {
   recommendationsAreLoading: false,

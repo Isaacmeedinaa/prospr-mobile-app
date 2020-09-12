@@ -1,8 +1,9 @@
 import { combineReducers } from "redux";
 
-import loader from "./loader";
-import jwtLoader from "./jwtLoader";
-import recommendationsLoader from "./recommendationsLoader";
+import loader from "./loaders/loader";
+import jwtLoader from "./loaders/jwtLoader";
+import recommendationsLoader from "./loaders/recommendationsLoader";
+import recommendationLoader from "./loaders/recommendationLoader";
 import loggedInUser from "./loggedInUser";
 import browser from "./browser";
 import pro from "./pro";
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   loader,
   jwtLoader,
   recommendationsLoader,
+  recommendationLoader,
   loggedInUser,
   browser,
   pro,

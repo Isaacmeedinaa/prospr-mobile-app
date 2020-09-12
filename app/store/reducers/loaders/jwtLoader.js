@@ -1,4 +1,7 @@
-import { JWT_IS_LOADING, JWT_IS_NOT_LOADING } from "../actions/jwtLoader";
+import {
+  JWT_IS_LOADING,
+  JWT_IS_NOT_LOADING,
+} from "../../actions/loaders/jwtLoader";
 
 const jwtLoader = (state = false, action) => {
   switch (action.type) {
