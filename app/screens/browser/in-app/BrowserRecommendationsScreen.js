@@ -9,6 +9,7 @@ import {
 
 import { connect } from "react-redux";
 import {
+  fetchAllRecommendations,
   fetchInitialRecommendations,
   refreshInitialRecommendations,
   fetchNextRecommendations,
@@ -19,7 +20,7 @@ import RecommendationCard from "../../../components/UI/browser/recommendations/R
 import colors from "../../../constants/colors";
 
 class BrowserRecommendationsScreen extends Component {
-  constructor() {
+  constructor(props) {
     super();
 
     this.state = {
@@ -29,14 +30,19 @@ class BrowserRecommendationsScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchInitialRecommendations();
+    // this.props.fetchInitialRecommendations();
+    this.props.fetchAllRecommendations();
   }
 
   handleRefresh = () => {
-    this.setState({ refershing: true }, () =>
-      this.props.refreshInitialRecommendations()
+    // this.setState({ refershing: true }, () =>
+    //   this.props.refreshInitialRecommendations()
+    // );
+    // this.setState({ page: 1, refreshing: false });
+    this.setState({ refreshing: true }, () =>
+      this.props.fetchAllRecommendations()
     );
-    this.setState({ page: 1, refreshing: false });
+    this.setState({ refreshing: false });
   };
 
   loadMoreRecommendations = () => {
@@ -48,8 +54,10 @@ class BrowserRecommendationsScreen extends Component {
     );
   };
 
-  newRecommedationOnPress = () => {
-    this.props.navigation.navigate("BrowserNewRecommendation");
+  resetPageCount = () => {
+    this.setState({
+      page: 1,
+    });
   };
 
   render() {
@@ -81,9 +89,9 @@ class BrowserRecommendationsScreen extends Component {
               refreshing={this.props.recommendationsAreRefreshing}
             />
           }
-          onEndReachedThreshold={0}
-          onEndReached={this.loadMoreRecommendations}
-          // extraData={this.props.recommendations}
+          // onEndReachedThreshold={0}
+          // onEndReached={this.loadMoreRecommendations}
+          extraData={this.props.recommendations}
         />
       </View>
     );
@@ -123,6 +131,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchAllRecommendations: () => dispatch(fetchAllRecommendations()),
     fetchInitialRecommendations: () => dispatch(fetchInitialRecommendations()),
     refreshInitialRecommendations: () =>
       dispatch(refreshInitialRecommendations()),

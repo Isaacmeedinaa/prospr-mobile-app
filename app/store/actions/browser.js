@@ -1,8 +1,8 @@
 import React from "react";
 import { Alert, AsyncStorage } from "react-native";
 
-import { JWT_IS_LOADING, JWT_IS_NOT_LOADING } from "./jwtLoader";
-import { IS_LOADING, IS_NOT_LOADING } from "./loader";
+import { JWT_IS_LOADING, JWT_IS_NOT_LOADING } from "./loaders/jwtLoader";
+import { IS_LOADING, IS_NOT_LOADING } from "./loaders/loader";
 import { SET_JWT_TYPE_AND_ID } from "./loggedInUser";
 import { BASE_URL } from "../../constants/urls";
 
