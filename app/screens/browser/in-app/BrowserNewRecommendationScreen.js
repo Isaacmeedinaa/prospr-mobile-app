@@ -28,7 +28,7 @@ class BrowserNewRecommendationScreen extends Component {
       title: "",
       content: "",
       media: [],
-      mediaUrls: [],
+      mediaObjs: [],
       imageIsUploading: false,
       imageIsDeleting: false,
     };
@@ -95,9 +95,10 @@ class BrowserNewRecommendationScreen extends Component {
             )
               .then((resp) => resp.json())
               .then((data) => {
+                const mediaObj = { type: "image", url: data.url };
                 this.setState({
                   ...this.state,
-                  mediaUrls: [...this.state.mediaUrls, data.url],
+                  mediaObjs: [...this.state.mediaObjs, mediaObj],
                   imageIsUploading: false,
                 });
               });
@@ -110,7 +111,7 @@ class BrowserNewRecommendationScreen extends Component {
 
             const data = new FormData();
             data.append("file", media);
-            data.append("folder", "prospr");
+            data.append("folder", "prospr/recommendations");
             data.append("upload_preset", "bx8tmipy"),
               data.append("cloud_name", "zenyx-llc");
 
@@ -128,10 +129,10 @@ class BrowserNewRecommendationScreen extends Component {
             )
               .then((resp) => resp.json())
               .then((data) => {
-                console.log(data);
+                const mediaObj = { type: "video", url: data.url };
                 this.setState({
                   ...this.state,
-                  mediaUrls: [...this.state.mediaUrls, data.url],
+                  mediaObjs: [...this.state.mediaObjs, mediaObj],
                   imageIsUploading: false,
                 });
               });
@@ -152,7 +153,15 @@ class BrowserNewRecommendationScreen extends Component {
       `Delete this ${type}?`,
       `Are you sure you want to delete this ${type}?`,
       [
-        { text: "No" },
+        {
+          text: "No",
+          onPress: () => {
+            this.setState({
+              ...this.state,
+              imageIsDeleting: false,
+            });
+          },
+        },
         {
           text: "Yes",
           style: "destructive",
@@ -162,10 +171,10 @@ class BrowserNewRecommendationScreen extends Component {
               ...this.state,
               media: this.state.media,
             });
-            this.state.mediaUrls.splice(index, 1);
+            this.state.mediaObjs.splice(index, 1);
             this.setState({
               ...this.state,
-              mediaUrl: this.state.mediaUrl,
+              mediaObjs: this.state.mediaObjs,
               imageIsDeleting: false,
             });
           },
@@ -178,13 +187,12 @@ class BrowserNewRecommendationScreen extends Component {
     this.props.createRecommendation(
       this.state.title,
       this.state.content,
-      this.state.mediaUrls,
+      this.state.mediaObjs,
       this.props.navigation
     );
   };
 
   render() {
-    console.log(this.props);
     return (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="handled"
@@ -215,6 +223,7 @@ class BrowserNewRecommendationScreen extends Component {
               {this.state.media.map((media, index) =>
                 media.type === "image" ? (
                   <TouchableOpacity
+                    disabled={this.state.imageIsUploading}
                     key={index}
                     activeOpacity={0.8}
                     onPress={() =>
@@ -229,6 +238,7 @@ class BrowserNewRecommendationScreen extends Component {
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
+                    disabled={this.state.imageIsUploading}
                     key={index}
                     activeOpacity={0.8}
                     onPress={() =>
@@ -334,8 +344,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createRecommendation: (title, content, mediaUrls, navigation) =>
-      dispatch(createRecommendation(title, content, mediaUrls, navigation)),
+    createRecommendation: (title, content, mediaObjs, navigation) =>
+      dispatch(createRecommendation(title, content, mediaObjs, navigation)),
   };
 };
 

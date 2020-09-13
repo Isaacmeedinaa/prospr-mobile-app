@@ -37,6 +37,20 @@ export const fetchAllRecommendations = () => {
   };
 };
 
+export const refreshAllRecommendations = () => {
+  return (dispatch) => {
+    fetch(`${BASE_URL}/recommendations`)
+      .then((resp) => resp.json())
+      .then((recommendations) => {
+        dispatch({
+          type: SET_RECOMMENDATIONS,
+          recommendations: recommendations,
+        });
+      })
+      .catch((err) => console.log(err));
+  };
+};
+
 export const fetchInitialRecommendations = () => {
   return (dispatch) => {
     dispatch({ type: IS_LOADING });
@@ -85,7 +99,7 @@ export const fetchNextRecommendations = (pageNumber) => {
   };
 };
 
-export const createRecommendation = (title, content, mediaUrls, navigation) => {
+export const createRecommendation = (title, content, mediaObjs, navigation) => {
   return (dispatch, getState) => {
     const browserId = getState().loggedInUser.id;
     const userToken = getState().loggedInUser.jwt;
@@ -93,7 +107,7 @@ export const createRecommendation = (title, content, mediaUrls, navigation) => {
     const recommendationData = {
       title: title,
       content: content,
-      media_urls: mediaUrls,
+      media_objs: mediaObjs,
       browser_id: browserId,
     };
 
@@ -121,7 +135,7 @@ export const createRecommendation = (title, content, mediaUrls, navigation) => {
           //   type: CREATE_RECOMMENDATION,
           //   recommendation: data.recommendation,
           // });
-          dispatch(refreshInitialRecommendations());
+          dispatch(fetchAllRecommendations());
           navigation.goBack();
         }
       })
