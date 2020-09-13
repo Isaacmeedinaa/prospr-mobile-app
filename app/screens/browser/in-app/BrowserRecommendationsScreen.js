@@ -10,6 +10,7 @@ import {
 import { connect } from "react-redux";
 import {
   fetchAllRecommendations,
+  refreshAllRecommendations,
   fetchInitialRecommendations,
   refreshInitialRecommendations,
   fetchNextRecommendations,
@@ -33,14 +34,13 @@ class BrowserRecommendationsScreen extends Component {
     // this.props.fetchInitialRecommendations();
     this.props.fetchAllRecommendations();
   }
-
   handleRefresh = () => {
     // this.setState({ refershing: true }, () =>
     //   this.props.refreshInitialRecommendations()
     // );
     // this.setState({ page: 1, refreshing: false });
     this.setState({ refreshing: true }, () =>
-      this.props.fetchAllRecommendations()
+      this.props.refreshAllRecommendations()
     );
     this.setState({ refreshing: false });
   };
@@ -79,6 +79,7 @@ class BrowserRecommendationsScreen extends Component {
               id={item.id}
               recommendationData={item}
               navigation={this.props.navigation}
+              videoIsPlaying={this.state.videoIsPlaying}
             />
           )}
           keyExtractor={(item) => item.id.toString()}
@@ -132,6 +133,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAllRecommendations: () => dispatch(fetchAllRecommendations()),
+    refreshAllRecommendations: () => dispatch(refreshAllRecommendations()),
     fetchInitialRecommendations: () => dispatch(fetchInitialRecommendations()),
     refreshInitialRecommendations: () =>
       dispatch(refreshInitialRecommendations()),

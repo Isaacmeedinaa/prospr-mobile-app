@@ -8,6 +8,7 @@ import {
   Alert,
   Button,
 } from "react-native";
+import { Audio, Video } from "expo-av";
 
 import { connect } from "react-redux";
 import { deleteRecommendation } from "../../../../store/actions/recommendations";
@@ -22,24 +23,76 @@ class RecommendationCard extends Component {
 
     this.state = {
       isLiked: false,
+      videoIsPlaying: true,
+      videoIsMuted: true,
     };
   }
+
+  async componentDidMount() {
+    await Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+    });
+
+    this.willBlurSubscription = this.props.navigation.addListener(
+      "blur",
+      this.willBlurAction
+    );
+    this.willFocusSubscription = this.props.navigation.addListener(
+      "focus",
+      this.willFocusAction
+    );
+  }
+
+  willBlurAction = () => {
+    this.setState({
+      videoIsPlaying: false,
+    });
+  };
+
+  willFocusAction = () => {
+    this.setState({
+      videoIsPlaying: true,
+    });
+  };
 
   renderRecommendationImages = () => {
     const recommendationImages = this.props.recommendationData.item
       .recommendation_images;
-    return recommendationImages.map((recommendationImage) => (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        style={styles.recommendationImageButton}
-        key={recommendationImage.id}
-      >
-        <Image
-          style={styles.recommendationImage}
-          source={{ uri: recommendationImage.img_url }}
-        />
-      </TouchableOpacity>
-    ));
+    return recommendationImages.map((recommendationImage) => {
+      if (recommendationImage.img_type === "video") {
+        return (
+          <TouchableOpacity
+            key={recommendationImage.id}
+            activeOpacity={0.8}
+            style={styles.recommendationImageButton}
+          >
+            <Video
+              key={recommendationImage.id}
+              style={styles.recommendationImage}
+              source={{ uri: recommendationImage.img_url }}
+              shouldPlay={this.state.videoIsPlaying}
+              isLooping={true}
+              useNativeControls={true}
+              isMuted={this.state.videoIsMuted}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+        );
+      } else if (recommendationImage.img_type === "image") {
+        return (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.recommendationImageButton}
+            key={recommendationImage.id}
+          >
+            <Image
+              style={styles.recommendationImage}
+              source={{ uri: recommendationImage.img_url }}
+            />
+          </TouchableOpacity>
+        );
+      }
+    });
   };
 
   likeRecommendationOnPress = () => {
@@ -150,14 +203,6 @@ class RecommendationCard extends Component {
           <Text style={styles.postedOn}>
             {this.props.recommendationData.item.posted_on}
           </Text>
-          <Button
-            title="Edit"
-            onPress={() =>
-              this.props.navigation.push("BrowserEditRecommendation", {
-                recommendationId: this.props.recommendationData.item.id,
-              })
-            }
-          />
         </View>
       </TouchableOpacity>
     );
